@@ -1,0 +1,336 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autobot FB</title>
+<link rel="icon" href="profile.jpeg" type="image/x-icon"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+63H7tLJC5l/Wr+8+BRy5LPT2oXa4lEbrGPE2GOlDzIh0M4" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <meta name="Info" content="Create Your Own Bot For Free Without Programming Skills!">
+  <br>
+  <div class="container">
+    <h1 class="text-center animated" data-animation="slideIn" style="margin-bottom: 1px; font-size: 28px;">Facebook Autobot</h1>
+    <mark style="font-size: 9px; color: #3A3B3C; margin-top: 0px; background-color: #FBB117; text-align: center; border-radius: 2px;">Markdevs69 v1.0</mark>
+      <!--<div style="font-weight: bold; font-size: 12px; color: #fff; animation: heartbeat 1.3s ease-in-out infinite; opacity: 0.7; margin-top: 2px; margin-bottom: 13px;"id="ping">Ping:
+        <span class="ping-container"></span>
+      </div>-->
+    <form id="cookie-form">
+        <textarea id="json-data" placeholder="Paste your Facebook appstate here!"></textarea></form>
+        <div id="prefixOfCommands">
+            <label for="inputOfPrefix">Prefix: (optional)</label>
+            <input type="text" id="inputOfPrefix">
+        </div>
+        <div id="adminOfCommands">
+            <label for="inputOfAdmin">Owner uid: (optional)</label>
+            <input type="text" id="inputOfAdmin">
+        </div>
+    </form>
+    <p style="margin-top: 20px; color: var(--light-gray);" id="onlineUsers">Active Session: fetching...</p>
+      <audio id="audio" loop>
+    <source src="ssstik.io_1718476693067.mp3" type="audio/mpeg">
+  </audio>
+    <h1 class="col text-center" style="font-size: 20px; margin-top: 20px;">Terms and Conditions & Privacy Policy</h1>
+        <div class="terms-text">
+            <p>Upon deployment or login, your chatbot connection remains active unless you personally access the bot's account or modify the password. This measure ensures seamless operation and security.</p>
+            <p>By interacting with our Facebook bot, you agree to comply with all applicable Facebook policies and guidelines.</p>
+            <p>The information provided by the bot is for general informational purposes only and should not be considered as professional advice.</p>
+            <p>We respect your privacy and will not share your personal information with third parties without your consent.</p>
+            <p>We may collect and store certain information such as your Facebook public profile and interactions with the bot for improving user experience.</p>
+        </div>
+      <center>
+    <button type="submit" id="submitButton">Submit</butto>
+  </center>
+        <div id="result" class="text-center"></div>
+      <br>
+      <br>
+        <br> <!--
+      <p style="margin-top: 20px;">Facebook Autobot by<a style="color: #81D4FA" href="https://www.facebook.com/mark.dev69"> Markdevs69</a></p>
+  </div>
+    <div class="container">
+    <h1 style="text-align: center; margin-left: 5px; margin-bottom: 0px;">Appstate Getter<mark style="font-size: 9px; color: var(--onyx); margin-top: 0px; background-color: var(--orange-yellow-crayola); text-align: center; border-radius: 2px;">v1.1.2</mark></h1>
+        <br>
+    <p style="text-align: center; margin-left: 5px; margin-right: 5px; font-size: 12px; margin-top: 0px;">This appstate getter is not working for all accounts and I'm sorry for that.</p>
+<input type="tite" id="email" placeholder="Enter Email:" />
+<input type="tite" id="password" placeholder="Enter Password:" />
+        <br>
+        <br>
+        <button onclick="getState()">Login</button>
+        </div>
+    <div id="ping" class="container">
+        <span class="ping-text ping-container"></span>
+    </div>
+        <br>-->
+      <footer>
+          <p style="color: #fff">Made with &#129505; by <a class="link" href="https://www.facebook.com/mark.dev69">Markdevs69</a></p>
+      </footer>
+  </div>
+      <br>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+        function measurePing() {
+      var xhr = new XMLHttpRequest();
+      var startTime, endTime;
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+          endTime = Date.now();
+          var pingTime = endTime - startTime;
+          var pingElement = document.querySelector('#ping .ping-text');
+          pingElement.textContent = pingTime + " ms";
+
+          var pingContainer = document.querySelector('.ping-container');
+          if (pingTime <= 299) {
+            pingContainer.classList.remove('ping-medium', 'ping-bad');
+            pingContainer.classList.add('ping-good');
+          } else if (pingTime <= 599) {
+            pingContainer.classList.remove('ping-good', 'ping-bad');
+            pingContainer.classList.add('ping-medium');
+          } else {
+            pingContainer.classList.remove('ping-good', 'ping-medium');
+            pingContainer.classList.add('ping-bad');
+          }
+        }
+      };
+      xhr.open("GET", location.href + "?t=" + new Date().getTime());
+      startTime = Date.now();
+      xhr.send();
+    }
+    setInterval(measurePing, 1000);
+
+    function updatePing() {
+    const start = performance.now();
+    const pingText = document.querySelector('#ping');
+
+    fetch('/')
+      .then(() => {
+        const end = performance.now();
+        const time = end - start;
+        pingText.textContent = `Ping: ${time.toFixed(2)} ms`;
+      })
+      .catch((error) => console.error(error));
+  }
+
+  setInterval(updatePing, 1000);
+  updatePing();
+
+document.addEventListener("DOMContentLoaded", function() {
+  var audio = document.getElementById("audio");
+  var playPromise = audio.play();
+
+  if (playPromise !== undefined) {
+    playPromise.then(_ => {
+    }).catch(error => {
+      window.addEventListener("click", function() {
+        audio.play();
+      });
+    });
+  }
+});
+
+document.getElementById('json-data').addEventListener('input', function() {
+    this.style.height = 'auto';
+    this.style.height = (this.scrollHeight) + 'px';
+});
+/*
+document.getElementById("showCommandsBtn").addEventListener("click", function() {
+    const commandsDiv = document.getElementById("availableCommands");
+    const commandsList = document.getElementById('commandsList');
+
+    if (commandsDiv.classList.contains("show-commands")) {
+        commandsList.style.display = 'none'; // Hide the commands list
+    } else {
+        fetchCommands(); // Add your fetchCommands function call here if needed
+        commandsList.style.display = 'block'; // Display the commands list
+    }
+
+    commandsDiv.classList.toggle("show-commands");
+    this.classList.toggle("show-button");
+});*/
+
+
+function fetchCommands() {
+    axios.get('/commands')
+        .then(response => {
+            const data = response.data;
+            if (data && Array.isArray(data.commands)) {
+                const commandsList = document.getElementById('commandsList');
+                commandsList.innerHTML = '';
+
+                // Display commands
+                const commandsTitle = document.createElement('h3');
+                commandsTitle.textContent = 'COMMANDS';
+                commandsList.appendChild(commandsTitle);
+                data.commands.forEach((command, index) => {
+                    const commandItem = document.createElement('div');
+                    commandItem.textContent = `${index + 1}. ${command}`;
+                    commandsList.appendChild(commandItem);
+                });
+
+                // Display handle events
+                if (data.handleEvents && Array.isArray(data.handleEvents)) {
+                    const handleEventsTitle = document.createElement('h3');
+                    handleEventsTitle.textContent = 'HANDLE EVENTS';
+                    commandsList.appendChild(handleEventsTitle);
+                    data.handleEvents.forEach((event, index) => {
+                        const eventItem = document.createElement('div');
+                        eventItem.textContent = `${index + 1}. ${event}`;
+                        commandsList.appendChild(eventItem);
+                    });
+                }
+
+             /*   // Display aliases
+                if (data.aliases && Array.isArray(data.aliases)) {
+                    const aliasesTitle = document.createElement('h3');
+                    aliasesTitle.textContent = 'ALIASES';
+                    commandsList.appendChild(aliasesTitle);
+                    data.aliases.forEach((alias, index) => {
+                        if (Array.isArray(alias)) {
+                            const aliasItem = document.createElement('div');
+                            aliasItem.textContent = `${index + 1}. ${alias.join(', ')}`;
+                            commandsList.appendChild(aliasItem);
+                        }
+                    });
+                }*/
+
+                // Display the command list
+                commandsList.style.display = 'block';
+            } else {
+                console.error('Invalid response format from server.');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching commands:', error);
+        });
+}
+
+/*
+document.getElementById('agreeCheckbox').addEventListener('change', function() {
+    const submitButton = document.getElementById('submitButton');
+    submitButton.style.display = this.checked ? 'block' : 'none';
+});*/
+
+document.getElementById('submitButton').addEventListener('click', function(event) {
+  event.preventDefault();
+  State(); 
+});
+
+document.getElementById('cookie-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  State();
+});
+
+
+/*function showAds() {
+    var ads = [
+        'https://tinyurl.com/24jn3sxr',
+        'https://tinyurl.com/27ftp24m',
+        'https://tinyurl.com/22axs8qu',
+        'https://tinyurl.com/2y4bujzl',
+        'https://tinyurl.com/29qyrnwz',
+        'https://direct-link.net/1146400/rootless-module'
+    ];
+    var index = Math.floor(Math.random() * ads.length);
+    window.location.href = ads[index];
+}
+*/
+
+function State() {
+    const jsonInput = document.getElementById('json-data');
+    const button = document.getElementById('submitButton');
+    try {
+        button.style.display = 'none';
+        const State = JSON.parse(jsonInput.value);
+        if (State && typeof State === 'object') {
+            axios.post('/login', {
+                    state: State,
+                    prefix: document.getElementById('inputOfPrefix').value,
+                    admin: document.getElementById('inputOfAdmin').value,
+                })
+                .then(response => {
+                    const data = response.data;
+                    if (data.success) {
+                        jsonInput.value = '';
+                        showResult(data.message);
+                        //showAds();
+                    } else {
+                        jsonInput.value = '';
+                        showResult(`Facebook may temporarily lock your account or restrict it if it suspects any suspicious activity or a potential security breach, to protect you. If Facebook suspects that your account is being logged in as a bot or, being flag as a spam, it may take longer you should try submit appstate later!`);
+                        //showAds();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showResult('An error occurred. Please try again later.');
+                   // showAds();
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        button.style.display = 'block';
+                    }, 4000);
+                });
+        } else {
+            jsonInput.value = '';
+            showResult('Invalid JSON data. Please check your input.');
+           // showAds();
+        }
+    } catch (parseError) {
+        jsonInput.value = '';
+        console.error('Error parsing JSON:', parseError);
+        showResult('Error parsing JSON. Please check your input.');
+        //showAds();
+    }
+}
+
+function showResult(message) {
+  const resultContainer = document.getElementById('result');
+  resultContainer.innerHTML = `<h5>${message}</h5>`;
+  resultContainer.style.display = 'block';
+}
+     async function getState() {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+
+      if (!email || !pass) {
+        alert("Please enter both email and password.");
+      } else {
+        try {
+          const response = await fetch(`/stater?email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}`);
+
+          if (response.ok) {
+            const data = await response.json();
+
+            if (data.appState) {
+              document.getElementById("json-data").value = data.appState;
+              alert("Appstate retrieved successfully.");
+            } else {
+              alert("Login failed or no state received.");
+            }
+          } else {
+            alert("Error: " + response.statusText);
+          }
+        } catch (error) {
+          alert("Internal server error");
+        }
+      }
+    }
+
+    function fetchOnlineUsersCount() {
+    axios.get('/online-users')
+        .then(response => {
+            document.getElementById('onlineUsers').textContent = response.data.onlineUsers;
+        })
+        .catch(error => {
+            console.error('Error fetching online users count:', error);
+        });
+}
+
+// Fetch online users count when the page loads
+window.onload = function() {
+    fetchOnlineUsersCount();
+};
+
+</script>
+</body>
+</html>

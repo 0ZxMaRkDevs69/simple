@@ -3,40 +3,40 @@ const g4f = new G4F();
 const fs = require('fs');
 const path = require('path');
 const { DateTime } = require("luxon");
-const text = require("fontstyles");
-const fonts = {
-    bold: msg => text.bold(msg),
-};
 
 const conversationHistories = {};
 
 module.exports["config"] = {
   name: "ai",
   version: "1.0.0",
-  credits: "Markdevs69",
+  credits: "Markdevs",
   role: 0,
+  type: "artificial-intelligence",
+  info: "Interact with AI",
+  usage: "[prompt]",
+  guide: "aiv2 hi",
   cd: 2
 };
 
-module.exports["run"] = async ({ args, event, api }) => {
+module.exports["run"] = async ({ chat, args, event, fonts, api }) => {
   const { senderID } = event || {};
   let query = args.join(" ");
 
   if (['clear', 'reset', 'forgot', 'forget'].includes(query.toLowerCase())) {
     conversationHistories[senderID] = [];
-    const resp = await api.sendMessage(fonts.thin("Conversation history cleared."));
+    const resp = await chat.reply(fonts.thin("Conversation history cleared."));
     resp.unsend(5000);
     return;
   }
   const uid = event.senderID;
-  const info = await api.getUserInfo(event.senderID);
-  const name = (info[event.senderID].name);
+  //const info = await api.getUserInfo(event.senderID);
+  //const name = fonts.thin(info[event.senderID].name);
  // const startTime = new Date();
 
   if (!query) {
-   // chat.react("⁉️");
-    const resp = await api.sendMessage("Please provide a question first.");
-  //  resp.unsend(5000);
+    chat.react("⁉️");
+    const resp = await chat.reply(fonts.thin("Please provide a question first."));
+    resp.unsend(5000);
     return;
   }
 
@@ -59,7 +59,7 @@ module.exports["run"] = async ({ args, event, api }) => {
   };
     /*const endTime = new Date();
     const time = (endTime - startTime) / 1000;*/
-  let msg = await api.sendMessage("Please bear with me while I ponder your request.");
+  let msg = await chat.reply(fonts.thin("Please bear with me while I ponder your request."));
 
   while (attempts < maxRetries && !success) {
     try {
@@ -78,15 +78,15 @@ module.exports["run"] = async ({ args, event, api }) => {
       success = true;
     } catch (error) {
       if (attempts < maxRetries) {
-        await msg.sendMessage(fonts.thin(`No response from AI. Retrying... (${attempts} of ${maxRetries} attempts)`));
+        await msg.edit(fonts.thin(`No response from AI. Retrying... (${attempts} of ${maxRetries} attempts)`));
         await new Promise(resolve => setTimeout(resolve, 1000 * attempts));
       } else {
-        await msg.sendMessage(fonts.thin(`Server error: ${error.message}`));
+        await msg.edit(fonts.thin(`No response from AI. Please try again later: ${error.message}`));
       }
     }
   }
-    //const endTime = new Date();
-    //const time = (endTime - startTime) / 1000;
+  //  const endTime = new Date();
+   // const time = (endTime - startTime) / 1000;
   if (success) {
     conversationHistories[senderID].push({ role: "assistant", content: answer });
 
@@ -94,7 +94,7 @@ module.exports["run"] = async ({ args, event, api }) => {
     const line = "\n\n";
     const formattedMessage = (`${answer}`) + line + (`CHAT ID: ${uid}`);
 
-    await msg.sendMessage(formattedMessage);
+    await msg.edit(formattedMessage);
 
     if (codeBlocks.length > 0) {
       const allCode = codeBlocks.map(block => block.replace(/```/g, '').trim()).join('\n\n\n');
@@ -109,7 +109,7 @@ module.exports["run"] = async ({ args, event, api }) => {
 
       fs.writeFileSync(filePath, allCode, 'utf8');
 
-      await api.sendMessage({ attachment: fs.createReadStream(filePath) });
+      await chat.reply({ attachment: fs.createReadStream(filePath) });
 
       fs.unlinkSync(filePath);
     }

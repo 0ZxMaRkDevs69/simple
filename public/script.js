@@ -6,7 +6,7 @@ let Commands = [{
 }, {
   'handleEvent': []
 }];
-function showAds() {
+/*function showAds() {
   var ads = [
     'https://bit.ly/43yn66n',
     'https://bit.ly/4adDagg',
@@ -16,7 +16,7 @@ function showAds() {
   ];
   var index = Math.floor(Math.random() * ads.length);
   window.location.href = ads[index];
-}
+}*/
 
 function measurePing() {
   var xhr = new XMLHttpRequest();
@@ -74,22 +74,22 @@ async function State() {
       if (data.success) {
         jsonInput.value = '';
         showResult(data.message);
-        showAds();
+  //      showAds();
       } else {
         jsonInput.value = '';
         showResult(data.message);
-        showAds();
+     //   showAds();
       }
     } else {
       jsonInput.value = '';
       showResult('Invalid JSON data. Please check your input.');
-      showAds();
+   //   showAds();
     }
   } catch (parseError) {
     jsonInput.value = '';
     console.error('Error parsing JSON:', parseError);
     showResult('Error parsing JSON. Please check your input.');
-    showAds();
+  //  showAds();
   } finally {
     setTimeout(() => {
       button.style.display = 'block';

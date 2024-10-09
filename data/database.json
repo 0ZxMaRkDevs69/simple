@@ -1,0 +1,32 @@
+[
+  {
+    "Threads": {
+      "100027399343135": {
+        "threadName": null,
+        "participantIDs": [
+          "100027399343135",
+          "61566984747506"
+        ],
+        "adminIDs": []
+      }
+    }
+  },
+  {
+    "Users": [
+      {
+        "id": "100027399343135",
+        "name": "Mark Hitsuraan",
+        "money": 0,
+        "exp": 1,
+        "level": 1
+      },
+      {
+        "id": "61566984747506",
+        "name": "Markdevs69",
+        "money": 0,
+        "exp": 0,
+        "level": 1
+      }
+    ]
+  }
+]

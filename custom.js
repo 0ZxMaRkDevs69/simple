@@ -1,103 +1,40 @@
-const cron = require('node-cron');
 const axios = require('axios');
-//const FormData = require('form-data');
+const cron = require('node-cron');
 
-module.exports = ({
-    api, fonts
-}) => {
+let fontEnabled = true;
+
+function formatFont(text) { 
+  const fontMapping = {
+    a: "𝖺", b: "𝖻", c: "𝖼", d: "𝖽", e: "𝖾", f: "𝖿", g: "𝗀", h: "𝗁", i: "𝗂", j: "𝗃", k: "𝗄", l: "𝗅", m: "𝗆",
+    n: "𝗇", o: "𝗈", p: "𝗉", q: "𝗊", r: "𝗋", s: "𝗌", t: "𝗍", u: "𝗎", v: "𝗏", w: "𝗐", x: "𝗑", y: "𝗒", z: "𝗓",
+    A: "𝖠", B: "𝖡", C: "𝖢", D: "𝖣", E: "𝖤", F: "𝖥", G: "𝖦", H: "𝖧", I: "𝖨", J: "𝖩", K: "𝖪", L: "𝖫", M: "𝖬",
+    N: "𝖭", O: "𝖮", P: "𝖯", Q: "𝖰", R: "𝖱", S: "𝖲", T: "𝖳", U: "𝖴", V: "𝖵", W: "𝖶", X: "𝖷", Y: "𝖸", Z: "𝖹"
+  };
+
+  let formattedText = "";
+  for (const char of text) {
+    if (fontEnabled && char in fontMapping) {
+      formattedText += fontMapping[char];
+    } else {
+      formattedText += char;
+    }
+  }
+
+  return formattedText;
+}
+
+module.exports = async ({ api, fonts }) => {
     const mono = txt => fonts.monospace(txt);
+  /*const messagedThreads = new Set();
 
-    const greetings = {
-        morning: [
-            "Good morning! Have a great day!",
-            "Rise and shine! Good morning!",
-            "Morning! Hope you have an amazing day!",
-            "Gising na kayo umaga na!",
-        ],
-        afternoon: [
-            "Good afternoon! Keep up the great work!",
-            "Afternoon! Hope you're having a wonderful day!",
-            "Hello! Wishing you a pleasant afternoon!",
-            "Time to eat something!",
-            "Maayong udto mga ril nigas pangaon namo!",
-        ],
-        evening: [
-            "Good evening! Relax and enjoy your evening!",
-            "Evening! Hope you had a productive day!",
-            "Hello! Have a peaceful and enjoyable evening!",
-        ],
-        night: [
-            "Good night! Rest well!",
-            "Night! Sweet dreams!",
-            "Hello! Wishing you a restful night!",
-            "Tulog na kayo!",
-        ]
-    };
-
-    async function restart(timeOfDay) {
-        process.exit(0);
+  async function createPost(body, threadID) {
+    try {
+      await api.sendMessage({ body }, threadID);
+      messagedThreads.add(threadID);
+    } catch (error) {
+      console.error("Error sending a message:", error);
     }
-
-    function greetRandom(timeOfDay) {
-        const greetingsList = greetings[timeOfDay];
-        return greetingsList[Math.floor(Math.random() * greetingsList.length)];
-    }
-
-    async function greetThreads(timeOfDay) {
-        try {
-            console.log(`Sending ${timeOfDay} greetings...`);
-            const msgTxt = greetRandom(timeOfDay);
-            const threads = await api.getThreadList(10, null, ['INBOX']);
-
-            if (!threads || threads.length === 0) {
-                console.log('No threads found.');
-                return;
-            }
-
-            for (const thread of threads) {
-                if (thread.isGroup) {
-                    await api.sendMessage(mono(msgTxt), thread.threadID);
-                }
-            }
-        } catch (error) {
-            console.error(`Error sending ${timeOfDay} greeting:`, error);
-        }
-    }
-
-    async function clearChat() {
-        try {
-            console.log('Clearing chat...');
-            const threads = await api.getThreadList(25, null, ['INBOX']);
-            if (!threads || threads.length === 0) {
-                console.log('No threads to clear.');
-                return;
-            }
-            for (const thread of threads) {
-                if (!thread.isGroup) {
-                    await api.deleteThread(thread.threadID);
-                }
-            }
-        } catch (error) {
-            console.error('Error deleting threads:', error);
-        }
-    }
-
-    async function acceptPending() {
-        try {
-            console.log('Accepting pending messages...');
-            const pendingThreads = await api.getThreadList(25, null, ['PENDING']);
-            if (!pendingThreads || pendingThreads.length === 0) {
-                console.log('No pending threads to accept.');
-                return;
-            }
-
-            for (const thread of pendingThreads) {
-                await api.sendMessage(mono('📨 This thread is automatically approved by our system.'), thread.threadID);
-            }
-        } catch (error) {
-            console.error('Error accepting pending messages:', error);
-        }
-    }
+  }*/
 
     async function motivation() {
         try {
@@ -108,52 +45,16 @@ module.exports = ({
             const randomIndex = Math.floor(Math.random() * quotes.length);
             const randomQuote = quotes[randomIndex];
 
-            const quote = `"${randomQuote.quoteText}"\n\n— ${randomQuote.quoteAuthor || "Kenneth Panio"}`;
-            api.createPost(mono(quote)).catch(() => {});
+            const quote = `"${randomQuote.quoteText}"\n\n— ${randomQuote.quoteAuthor || "Markdevs69"}`;
+            api.createPost(formatFont(quote)).catch(() => {});
         } catch (error) {
             console.error('Error fetching or posting the motivational quote:', error);
         }
     }
 
-    // Scheduling cron jobs
-    const scheduleCronJobs = (hours, timeOfDay) => {
-        if (!Array.isArray(hours)) {
-            console.error(`Error: Invalid hours array for ${timeOfDay}:`, hours);
-            return;
-        }
-        hours.forEach(hour => {
-            cron.schedule(`0 ${hour} * * *`, () => {
-                console.log(`Scheduled ${timeOfDay} greetings at hour ${hour}`);
-                greetThreads(timeOfDay);
-            }, {
-                scheduled: true,
-                timezone: 'Asia/Manila'
-            });
-        });
-    };
-
-    scheduleCronJobs([5, 6, 7], 'morning');
-    scheduleCronJobs([12, 13], 'afternoon');
-    scheduleCronJobs([18, 19, 20, 21], 'evening');
-    scheduleCronJobs([22, 23], 'night');
-
-    cron.schedule('*/59 * * * *', restart, {
-        schedule: false,
-        timezone: 'Asia/Manila'
-    });
-
-    cron.schedule('*/59 * * * *', clearChat, {
-        scheduled: false,
-        timezone: 'Asia/Manila'
-    });
-
-    cron.schedule('*/50 * * * *', acceptPending, {
-        scheduled: false,
-        timezone: 'Asia/Manila'
-    });
-
-    cron.schedule('*/59 * * * *', motivation, {
-        scheduled: true,
-        timezone: 'Asia/Manila'
-    });
-};
+//cron.schedule('0 */1 * * *', motivation, {
+  cron.schedule('*/59 * * * *', motivation, {
+    scheduled: true,
+    timezone: "Asia/Manila"
+  });
+}

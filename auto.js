@@ -3,7 +3,7 @@ const path = require('path');
 const login = require('./system/chatbox-fca-remake/index');
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 25696;
+const PORT = process.env.PORT || 3000;
 const { initializeBot, fonts } = require('./system/chat');
 //const { OnChat, font } = require('./system/onChat');
 

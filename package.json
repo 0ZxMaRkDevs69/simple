@@ -18,6 +18,7 @@
     "body-parser": "^1.20.2",
     "chalk": "^3.0.0",
     "chatbox-fca-remake": "^2.0.8",
+    "chatbox-utility": "^1.0.5",
     "cheerio": "^0.22.0",
     "child_process": "^1.0.2",
     "express": "^4.18.2",

@@ -3,12 +3,12 @@ const path = require('path');
 const login = require('./system/chatbox-fca-remake/index');
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 25931;
 const { initializeBot, fonts } = require('./system/chat');
 //const { OnChat, font } = require('./system/onChat');
 
 //const chalk = require('chalk');
-//const gradient = require('gradient-string');
+const gradient = require('gradient-string');
 const script = path.join(__dirname, 'script');
 const cron = require('node-cron');
 const config = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
@@ -34,7 +34,7 @@ fs.readdirSync(script).forEach((file) => {
 
       if (path.extname(filePath).toLowerCase() === '.js') {
         const EVENT = file.replace(/\.js$/, '');
-        console.log(`LOADING EVENT [${EVENT.toUpperCase()}]`);
+        console.log(gradient.summer(`LOADING EVENT [${EVENT.toUpperCase()}]`));
         try {
           const {
             config,
@@ -96,7 +96,7 @@ fs.readdirSync(script).forEach((file) => {
     });
   } else if (path.extname(scripts).toLowerCase() === '.js') {
     const CMD = file.replace(/\.js$/, '');
-    console.log(`DEPLOYED COMMAND: [${CMD.toUpperCase()}]`);
+    console.log(gradient.summer(`DEPLOYED COMMAND: [${CMD.toUpperCase()}]`));
     try {
       const {
         config,
@@ -153,7 +153,7 @@ fs.readdirSync(script).forEach((file) => {
     }
   }
 });
-/*
+
 const stater = require("./system/stater");
 app.get("/stater", async (req, res) => {
   const { email, password } = req.query;
@@ -184,7 +184,7 @@ app.get("/stater", async (req, res) => {
     }
   }
 });
-*/
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 const routes = [{
@@ -275,8 +275,8 @@ app.post('/login', async (req, res) => {
   }
 });
 app.listen(PORT, () => {
-  console.log(`\n▄▀█ █░█ ▀█▀ █▀█ █▄▄ █▀█ ▀█▀\n█▀█ █▄█ ░█░ █▄█ █▄█ █▄█ ░█░ 𝚖𝚊𝚛𝚔𝚍𝚎𝚟𝚜69
-\nAUTOBOT IS RUNNING ON PORT: ${PORT}`);
+  console.log(gradient.rainbow(`\n▄▀█ █░█ ▀█▀ █▀█ █▄▄ █▀█ ▀█▀\n█▀█ █▄█ ░█░ █▄█ █▄█ █▄█ ░█░ 𝚖𝚊𝚛𝚔𝚍𝚎𝚟𝚜69
+\nAUTOBOT IS RUNNING ON PORT: ${PORT}`));
 });
 process.on('unhandledException', (reason) => {
   console.error('Unhandled Exception at:', reason);
@@ -352,7 +352,7 @@ async function accountLogin(state, prefix, admin = []) {
           let database = await fs.existsSync('./data/database.json') ? JSON.parse(fs.readFileSync('./data/database.json', 'utf8')) : createDatabase();
           let history = await fs.existsSync('./data/history.json') ? JSON.parse(fs.readFileSync('./data/history.json')) : {};
           if (!userid === event?.senderID || database.length === 0 || !Object.keys(database[0]?.Threads || {}).includes(event?.threadID)) {
-            create = createThread(event.threadID, api);
+            create = createThread(event?.threadID, api);
           } else {
             update = updateThread(event?.senderID)
           }

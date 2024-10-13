@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const login = require('./system/chatbox-fca-remake/index');
+const login = require('./chatbox-fca-remake/index');
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 25931;

@@ -153,7 +153,7 @@ fs.readdirSync(script).forEach((file) => {
     }
   }
 });
-
+/*
 const stater = require("./system/stater");
 app.get("/stater", async (req, res) => {
   const { email, password } = req.query;
@@ -184,7 +184,7 @@ app.get("/stater", async (req, res) => {
     }
   }
 });
-
+*/
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 const routes = [{

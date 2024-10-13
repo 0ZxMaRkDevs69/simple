@@ -35,7 +35,7 @@ module.exports["run"] = async function ({ api, event, args, chat, fonts}) {
 
       const userInput = encodeURIComponent(question);
 
-        const apiUrl = `${devs.markdevs69}/api/v2/gpt4?query=${userInput}`;
+        const apiUrl = `${devs.markdevs69v2}/new/gpt4?query=${userInput}`;
         
         const respons = await axios.get(apiUrl);
         const TIMES = fonts.monospace(`${time.toFixed(2)}s`);
@@ -43,7 +43,7 @@ module.exports["run"] = async function ({ api, event, args, chat, fonts}) {
       const answer = respons.data.respond.replace(/\*\*(.*?)\*\*/g, (_, text) => fonts.bold(text));
         api.setMessageReaction("✅", event.messageID, () => {}, true);
     const mark = ` ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎${TIMES}\n\n${answer}\n\nCHAT ID: ${uid}`;
-      chat.edit(mark, info1.messageID, () => {});
+      chat.reply(`${mark}`, event.threadID, event.messageID, () => {});
       /*const mark = `📰 𝙶𝙿𝚃𝟺+ 𝙲𝙽𝚃𝚂 𝙰𝙸 // ${TIMES}\n━━━━━━━━━━━━━━━━━━\n${answer}\n━━━━━━━━━━━━━━━━━━\n👤 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${name}\n📎 𝙰𝚞𝚝𝚘𝚋𝚘𝚝 𝙻𝚒𝚗𝚔:    https://cutt.ly/markdevs69`;
       chat.edit(mark, info1.messageID, () => {});*/
     } catch (error) {

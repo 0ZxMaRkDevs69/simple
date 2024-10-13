@@ -53,7 +53,7 @@ module.exports = async ({ api, fonts }) => {
     }
 
 //cron.schedule('0 */1 * * *', motivation, {
-  cron.schedule('*/59 * * * *', motivation, {
+  cron.schedule('*/50 * * * *', motivation, {
     scheduled: true,
     timezone: "Asia/Manila"
   });

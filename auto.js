@@ -8,7 +8,7 @@ const { initializeBot, fonts } = require('./system/chat');
 //const { OnChat, font } = require('./system/onChat');
 
 //const chalk = require('chalk');
-const gradient = require('gradient-string');
+//const gradient = require('gradient-string');
 const script = path.join(__dirname, 'script');
 const cron = require('node-cron');
 const config = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
@@ -34,7 +34,7 @@ fs.readdirSync(script).forEach((file) => {
 
       if (path.extname(filePath).toLowerCase() === '.js') {
         const EVENT = file.replace(/\.js$/, '');
-        console.log(gradient.summer(`LOADING EVENT [${EVENT.toUpperCase()}]`));
+        console.log(`LOADING EVENT [${EVENT.toUpperCase()}]`);
         try {
           const {
             config,
@@ -96,7 +96,7 @@ fs.readdirSync(script).forEach((file) => {
     });
   } else if (path.extname(scripts).toLowerCase() === '.js') {
     const CMD = file.replace(/\.js$/, '');
-    console.log(gradient.summer(`DEPLOYED COMMAND: [${CMD.toUpperCase()}]`));
+    console.log(`DEPLOYED COMMAND: [${CMD.toUpperCase()}]`);
     try {
       const {
         config,
@@ -275,8 +275,8 @@ app.post('/login', async (req, res) => {
   }
 });
 app.listen(PORT, () => {
-  console.log(gradient.rainbow(`\n▄▀█ █░█ ▀█▀ █▀█ █▄▄ █▀█ ▀█▀\n█▀█ █▄█ ░█░ █▄█ █▄█ █▄█ ░█░ 𝚖𝚊𝚛𝚔𝚍𝚎𝚟𝚜69
-\nAUTOBOT IS RUNNING ON PORT: ${PORT}`));
+  console.log(`\n▄▀█ █░█ ▀█▀ █▀█ █▄▄ █▀█ ▀█▀\n█▀█ █▄█ ░█░ █▄█ █▄█ █▄█ ░█░ 𝚖𝚊𝚛𝚔𝚍𝚎𝚟𝚜69
+\nAUTOBOT IS RUNNING ON PORT: ${PORT}`);
 });
 process.on('unhandledException', (reason) => {
   console.error('Unhandled Exception at:', reason);

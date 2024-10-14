@@ -38,6 +38,7 @@
     "npmlog": "^1.2.0",
     "os": "^0.1.2",
     "pastebin-api": "^7.0.0",
+    "pidusage": "^3.0.2",
     "random-useragent": "^0.5.0",
     "request": "^2.53.0",
     "simple-youtube-api": "^5.2.1",

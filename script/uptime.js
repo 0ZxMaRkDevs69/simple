@@ -1,74 +1,54 @@
-const os = require("os");
-let timestamp;
-// Capture the bot's start time
-const startTime = new Date();
+const os = require('os');
+const pidusage = require('pidusage');
 
-const fs = require('fs');
-module.exports.config = {
-  name: "up",
-  version: "1.0.0",
-  cooldown: 5,
-  role: 0,
-  hasPrefix: true,
-  aliases: ['upt'],
-  description: "uptime",
-  usage: "{pref}[name of cmd]",
-  credits: " Ainz"
+module.exports["config"] = {
+    name: "uptime",
+    version: "1.0.2",
+    role: 0,
+    credits: "cliff",
+    description: "uptime",
+    hasPrefix: false,
+    cooldowns: 5,
+    aliases: ["up"]
 };
 
-  module.exports.run = async function({ api, event, Utils, chat }) {
-    try {
-      const nowTime = Date.now();
-let callbackMS;
-      const user = api.getCurrentUserID();
-      const time = Utils.account.get(user).time;  
-      const ping = Date.now() - Date.now();
-      const days = Math.floor(time / 86400);
-      const hours = Math.floor(time % 86400 / 3600);
-      const minutes = Math.floor(time % 3600 / 60);
-      const seconds = Math.floor(time % 60);
+function byte2mb(bytes) {
+    const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    let l = 0, n = parseInt(bytes, 10) || 0;
+    while (n >= 1024 && ++l) n = n / 1024;
+    return `${n.toFixed(n < 10 && l > 0 ? 1 : 0)} ${units[l]}`;
+}
 
-      const loadAverage = os.loadavg();
-      const cpuUsage =
-        os
-          .cpus()
-          .map((cpu) => cpu.times.user)
-          .reduce((acc, curr) => acc + curr) / os.cpus().length;
+function getUptime(uptime) {
+    const days = Math.floor(uptime / (3600 * 24));
+    const hours = Math.floor((uptime % (3600 * 24)) / 3600);
+    const mins = Math.floor((uptime % 3600) / 60);
+    const seconds = Math.floor(uptime % 60);
+    const cores = `Cores: ${os.cpus().length}`;
 
-      const totalMemoryGB = os.totalmem() / 1024 ** 3;
-      const freeMemoryGB = os.freemem() / 1024 ** 3;
-      const usedMemoryGB = totalMemoryGB - freeMemoryGB;
-      const answering = await chat.reply("⏳ Checking system, please wait...", event.threadID, (err, info) => {
-      timestamp = info.timestamp;
-      callbackMS = Date.now();
-    });
-    await new Promise(resolve => setTimeout(resolve, 2000));
-  const latency = timestamp - nowTime;
-  const callbackTime = callbackMS - nowTime;
-  const mark = `
-╭───⧼ sʏsᴛᴇᴍ ɪɴғᴏ ⧽───✧
-│─ Language: Node.js
-│─ Node.js Version: ${process.version}
-│─ Uptime: (${days}) [ ${hours}:${minutes}:${seconds} ]
-│─ Latency: ${latency}
-│─ Callback: ${callbackTime}
-│─ Callback Difference: ${callbackTime - latency} ms
-│─ OS: ${os.type()} ${os.arch()}
-│─ CPU Model: ${os.cpus()[0].model}
-│─ Memory: ${usedMemoryGB.toFixed(2)} GB /${totalMemoryGB.toFixed(2)} GB
-│─ CPU Usage: ${cpuUsage.toFixed(1)}%
-│─ RAM Usage: ${((usedMemoryGB / totalMemoryGB) * 100).toFixed(1)}%
-╰─────────────────⬤
-`;
+    return `${days} days, ${hours} hours, ${mins} minutes, and ${seconds} seconds`;
+}
 
-      await 
-      chat.edit(mark, answering.messageID);
-    } catch (error) {
-      console.error("Error retrieving system information:", error);
-      api.sendMessage(
-        "Unable to retrieve system information.",
-        event.threadID,
-        event.messageID,
-      );
-    }
-  };
+module.exports["run"] = async ({ api, event, fonts, chat }) => {
+    const time = process.uptime();
+    const hours = Math.floor(time / (60 * 60));
+    const minutes = Math.floor((time % (60 * 60)) / 60);
+    const seconds = Math.floor(time % 60);
+
+    const usage = await pidusage(process.pid);
+
+    const osInfo = {
+        platform: os.platform(),
+        architecture: os.arch()
+    };
+    const tin = txt => fonts.thin(txt);
+
+    //const pending = await chat.reply("⏳ | Getting uptime information...");
+
+    const timeStart = Date.now();
+    const returnResult = `Running for ${hours} hour(s) ${minutes} minute(s) ${seconds} second(s).\n\n❖ Cpu usage: ${usage.cpu.toFixed(1)}%\n❖ RAM usage: ${byte2mb(usage.memory)}\n❖ Cores: ${os.cpus().length}\n❖ Ping: ${Date.now() - timeStart}ms\n❖ Operating System Platform: ${osInfo.platform}\n❖ System CPU Architecture: ${osInfo.architecture}`;
+
+    const marky = returnResult;
+
+    return chat.reply(tin(`${marky}`));
+};

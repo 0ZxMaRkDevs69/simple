@@ -11,7 +11,7 @@ module.exports.config = {
   info: "Search music from SoundCloud and send it as attachment.",
   credits: "Kenneth Panio",
   role: 0,
-  aliases: ['play', 'sing', 'song', 'kanta', 'spotify'],
+  aliases: ['play', 'sing', 'song', 'kanta', 'spotify','sc','lyrics'],
   usage: '[title]',
 };
 

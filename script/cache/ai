@@ -23,11 +23,11 @@ module.exports["run"] = async function ({ api, event, args, chat, fonts}) {
 
     try {
        api.setMessageReaction("⏳", event.messageID, () => {}, true);
-        const info1 = await new Promise(resolve => {
+        /*const info1 = await new Promise(resolve => {
         api.sendMessage("⏳ Please bear with me while I ponder your request...", event.threadID, (err, info1) => {
         resolve(info1);
        }, event.messageID);
-      });
+      });*/
 
         const uid = event.senderID;
         const endTime = new Date();
@@ -44,8 +44,6 @@ module.exports["run"] = async function ({ api, event, args, chat, fonts}) {
         api.setMessageReaction("✅", event.messageID, () => {}, true);
     const mark = ` ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎${TIMES}\n\n${answer}\n\nCHAT ID: ${uid}`;
       chat.reply(`${mark}`, event.threadID, event.messageID, () => {});
-      /*const mark = `📰 𝙶𝙿𝚃𝟺+ 𝙲𝙽𝚃𝚂 𝙰𝙸 // ${TIMES}\n━━━━━━━━━━━━━━━━━━\n${answer}\n━━━━━━━━━━━━━━━━━━\n👤 𝙰𝚜𝚔𝚎𝚍 𝚋𝚢: ${name}\n📎 𝙰𝚞𝚝𝚘𝚋𝚘𝚝 𝙻𝚒𝚗𝚔:    https://cutt.ly/markdevs69`;
-      chat.edit(mark, info1.messageID, () => {});*/
     } catch (error) {
         console.error(error);
         api.sendMessage("An error occurred while processing your request.", event.threadID);

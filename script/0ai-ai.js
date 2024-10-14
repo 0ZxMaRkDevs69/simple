@@ -1,11 +1,11 @@
 const axios = require("axios");
 
 module.exports["config"] = {
-  name: "hercia",
+  name: "ai",
   version: "4.8",
   role: 0,
-  credits: "shiki",
-  aliases: [],
+  credits: "Markdevs69",
+  aliases: ["Ai","AI","Gpt","GPT4","gpt4","gpt"],
   usage: "[prompt]",
   cd: 3,
 };

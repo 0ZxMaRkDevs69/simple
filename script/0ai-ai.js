@@ -1,43 +1,111 @@
-const axios = require("axios");
+const axios = require('axios');
+const fs = require('fs-extra');
+const path = require('path');
 
 module.exports["config"] = {
   name: "ai",
-  version: "4.8",
+  version: "5.0",
   role: 0,
-  credits: "Markdevs69",
   aliases: ["Ai","AI","Gpt","GPT4","gpt4","gpt"],
-  usage: "[prompt]",
-  cd: 3,
+  credits: "Markdevs69",
+  info: "Chat with GPT, process images, and more.",
+  usages: "gpt [command] [args]",
+  cd: 2,
 };
 
-module.exports["run"] = async function ({ api, event, args, fonts }) {
+module.exports["run"] = async ({ api, event, args, fonts }) => {
+  const { threadID, messageID, senderID } = event;
   const startTime = new Date();
-
-  if (args.length === 0) {
-    api.sendMessage("Please provide a question first.", event.threadID, event.messageID);
-    return;
+  //const command = args[0].toLowerCase();
+  let commands = args[0];
+  const query = args.slice(1).join(" ").trim();
+  if (query.length < 1) {
+      return api.sendMessage("Please provide a question first.", event.threadID, event.messageID);
   }
+const command = commands.toLowerCase();
+  try {
+    switch (command) {
+      case 'draw':
+        await drawImage(api, threadID, messageID, query);
+        break;
 
-  /*api.sendMessage("🗨️ | Answering your question, Please wait...", event.threadID, event.messageID);*/
+      case 'describe':
+        if (event.messageReply && event.messageReply.attachments && event.messageReply.attachments.length > 0) {
+          const photoUrl = event.messageReply.attachments[0].url;
+          const description = await describeImage(query, photoUrl);
+          api.sendMessage(description, threadID, messageID);
+        } else {
+          api.sendMessage("Please reply to a message with an image for description.", threadID, messageID);
+        }
+        break;
 
-  const content = args.join(" ");
-  const uid = event.senderID;
-  axios.get(`https://hercai.onrender.com/v3/hercai?question=${encodeURIComponent(content)}`)
-    .then(response => {
-      if (response.data.reply) {
-        //const aiResponse = response.data.reply;
-        const aiResponse = response.data.reply.replace(/\*\*(.*?)\*\*/g, (_, text) => fonts.bold(text));
+      default:
+        const response = await b(query, senderID);
+
+        const uid = event.senderID;
         const endTime = new Date();
   const time = (endTime - startTime) / 10000;
   const TIMES = fonts.monospace(`${time.toFixed(2)}s`);
-        api.sendMessage(`   ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎  ‎${TIMES}\n\n${aiResponse}\n\nCHAT ID: ${uid}`, event.threadID, event.messageID); 
-        
-      } else {
-        api.sendMessage("No response from AI", event.threadID, event.messageID);
-      }
-    })
-    .catch(error => {
-      console.error("🤖 Error:", error);
-      api.sendMessage("🤖 An error occurred while processing your request, Please try again later.", event.threadID, event.messageID);
-    });
+        api.sendMessage(`   ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎   ‎‎  ‎${TIMES}\n\n${response}\n\nCHAT ID: ${uid}`, event.threadID, event.messageID);
+    }
+  } catch (error) {
+    api.sendMessage(`An error occurred: ${error.message}`, threadID, messageID);
+  }
 };
+
+async function b(query) {
+  try {
+    const response = await axios.get(`https://hercai.onrender.com/v3/hercai?question=${encodeURIComponent(query)}`);
+    return response.data.reply;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function i(prompt) {
+  try {
+    const response = await axios.get(`https://dall-e-tau-steel.vercel.app/kshitiz?prompt=${encodeURIComponent(prompt)}`);
+    return response.data.response;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function describeImage(prompt, photoUrl) {
+  try {
+    const url = `https://sandipbaruwal.onrender.com/gemini2?prompt=${encodeURIComponent(prompt)}&url=${encodeURIComponent(photoUrl)}`;
+    const response = await axios.get(url);
+    return response.data.answer;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function drawImage(api, threadID, messageID, prompt) {
+  try {
+    const imageUrl = await i(prompt);
+
+    const filePath = path.join(__dirname, 'cache', `image_${Date.now()}.png`);
+    const writer = fs.createWriteStream(filePath);
+
+    const response = await axios({
+      url: imageUrl,
+      method: 'GET',
+      responseType: 'stream'
+    });
+
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+      writer.on('finish', resolve);
+      writer.on('error', reject);
+    }).then(() => {
+      api.sendMessage({
+        body: "",
+        attachment: fs.createReadStream(filePath)
+      }, threadID, () => fs.unlinkSync(filePath));
+    });
+  } catch (error) {
+    api.sendMessage(`An error occurred: ${error.message}`, threadID, messageID);
+  }
+}

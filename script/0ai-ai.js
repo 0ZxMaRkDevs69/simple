@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs-extra');
 const path = require('path');
+const { DateTime } = require("luxon");
 
 module.exports["config"] = {
   name: "ai",
@@ -56,7 +57,9 @@ const command = commands.toLowerCase();
 
 async function b(query) {
   try {
-    const answer1 = await axios.get(`https://ai-api69-with-model.vercel.app/ai?model=gpt-4o-2024-08-06&system=You are a helpful assistant with emoji chat emotion styles&question=${encodeURIComponent(query)}`);
+    const manilaTime = DateTime.now().setZone("Asia/Manila").toFormat("yyyy-MM-dd hh:mm:ss a");
+    
+    const answer1 = await axios.get(`https://ai-api69-with-model.vercel.app/ai?model=gpt-4o-2024-08-06&system=You are a helpful assistant with emoji chat emotion styles.\n\nCurrent Date and Time: ${manilaTime}&question=${encodeURIComponent(query)}`);
     return answer1.data.response;
   } catch (error) {
     throw error;

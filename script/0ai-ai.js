@@ -40,13 +40,14 @@ const command = commands.toLowerCase();
         break;
 
       default:
-        const response = await b(query, senderID);
+        const answer1 = await b(query, senderID, fonts);
+        const answer = answer1.replace(/\*\*(.*?)\*\*/g, (_, text) => fonts.bold(text));
 
         const uid = event.senderID;
         const endTime = new Date();
   const time = (endTime - startTime) / 10000;
   const TIMES = fonts.monospace(`${time.toFixed(2)}s`);
-        api.sendMessage(`   ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎   ‎‎  ‎${TIMES}\n\n${response}\n\nCHAT ID: ${uid}`, event.threadID, event.messageID);
+        api.sendMessage(`   ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎   ‎‎  ‎${TIMES}\n\n${answer}\n\nCHAT ID: ${uid}`, event.threadID, event.messageID);
     }
   } catch (error) {
     api.sendMessage(`An error occurred: ${error.message}`, threadID, messageID);
@@ -55,8 +56,8 @@ const command = commands.toLowerCase();
 
 async function b(query) {
   try {
-    const response = await axios.get(`https://hercai.onrender.com/v3/hercai?question=${encodeURIComponent(query)}`);
-    return response.data.reply;
+    const answer1 = await axios.get(`https://ai-api69-with-model.vercel.app/ai?model=gpt-4o-2024-08-06&system=You are a helpful assistant with emoji chat emotion styles&question=${encodeURIComponent(query)}`);
+    return answer1.data.response;
   } catch (error) {
     throw error;
   }

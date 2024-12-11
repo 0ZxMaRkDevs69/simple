@@ -16,6 +16,9 @@ const Utils = new Object({
   ObjectReply: new Map(),
   handleReply: [],
 });
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', '69.html'));
+});
 //const custom = require('./custom');
 const tin = txt => fonts.thin(txt);
 

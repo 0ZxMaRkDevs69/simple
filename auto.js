@@ -5,10 +5,6 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 25931;
 const { initializeBot, fonts } = require('./system/chat');
-//const { OnChat, font } = require('./system/onChat');
-
-//const chalk = require('chalk');
-//const gradient = require('gradient-string');
 const script = path.join(__dirname, 'script');
 const cron = require('node-cron');
 const config = fs.existsSync('./data') && fs.existsSync('./data/config.json') ? JSON.parse(fs.readFileSync('./data/config.json', 'utf8')) : createConfig();
